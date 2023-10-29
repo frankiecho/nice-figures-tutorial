@@ -1,0 +1,120 @@
+---
+title: "Making Figures Look Nice in R"
+author: "Frankie Cho"
+format: revealjs
+---
+
+## Why spend time visualising?
+
+-   Top publications has great figures. Always
+
+-   Clearly communicate results
+
+-   Deal with supervisor/ reviewer requests...?
+
+## Great figures at Nature
+
+![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06577-5/MediaObjects/41586_2023_6577_Fig1_HTML.png)
+
+*The geography of climate and the global patterns of species diversity* (Coelho et al., 2023)
+
+## Great figures at Nature
+
+![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06642-z/MediaObjects/41586_2023_6642_Fig1_HTML.png)
+
+High-resolution maps show that rubber causes substantial deforestation (Wang et al., 2023)
+
+## Edward Tufte: Data-to-ink ratio
+
+$$ \text{Data-to-ink ratio} = \frac{\text{Data ink}}{\text{Total ink used to print the graphic}} $$
+
+## Data example: koala monitoring data
+
+```{r echo=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(sf)
+library(geodata)
+library(janitor)
+strip_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0020/83513/koala-survey-strip-transect-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+line_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0018/83511/koala-survey-line-transect-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+urban_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0022/83515/koala-survey-urban-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+transect_location <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0021/83514/koala-survey-transect-location-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+sightings <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0019/83512/koala-survey-sightings-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+```
+```{r echo=FALSE}
+sightings$date_time <- strptime(paste(sightings$date, sightings$time), "%d/%m/%Y %H:%M:%S") %>% as.POSIXlt()
+sightings$year <- year(sightings$date_time)
+sightings$month <- month(sightings$date_time)
+sightings$week <- week(sightings$date_time)
+line_transect$transect_area_ha <- line_transect$transect_length_m * 70 * 0.0001
+survey_effort <- list(line_transect = line_transect, 
+                      strip_transect = strip_transect, 
+                      urban_transect = urban_transect) %>%
+  lapply(function(x) {
+    dplyr::select(x, date, transect_area_ha) %>%
+      mutate(date = as.Date(date, format = '%d/%m/%Y'),
+             transect_area_ha = as.numeric(transect_area_ha)) %>%
+      filter(!is.na(transect_area_ha) | !is.na(date))
+    }) %>%
+  bind_rows(.id ='transect_method' ) %>%
+  mutate(month = month(date)) %>%
+  group_by(month, transect_method) %>%
+  summarise(total_transect_area = sum(transect_area_ha, na.rm = T)) %>%
+  filter(!is.na(month))
+```
+```{r}
+scale_coef <- 50
+p1 <- sightings %>%
+  filter(!is.na(date_time)) %>%
+  group_by(month) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = month, y = count)) +
+  geom_bar(data = survey_effort, aes(x= month, y = total_transect_area/scale_coef, fill = transect_method), stat = 'identity') +
+  geom_line() +
+  scale_y_continuous(sec.axis = sec_axis( trans=~.*scale_coef, name="Surveyed area")) +
+  ggtitle("Number of koala sightings by survey effort")
+```
+
+```{r}
+aus <- gadm(country="AUS", level=0, path = '.', resolution = 2) %>% st_as_sf()
+aus_lga <- gadm(country="AUS", level=2, path = '.', resolution = 2) %>% st_as_sf()
+qld <- aus_lga %>%
+  filter(NAME_1 == 'Queensland') 
+seq <- qld %>%
+  filter(NAME_2 %in% c("Brisbane", "Gold Coast", "Ipswich", "Logan", "Moreton Bay", "Redland", "Sunshine Coast"))
+sightings_sf <- sightings %>%
+  filter(!is.na(eastings) & !is.na(northings)) %>%
+  st_as_sf(coords = c('eastings', 'northings'), crs = 28356)
+sightings_sf <- sightings_sf %>% st_transform(4326)
+p2 <- ggplot() +
+  geom_sf(data = aus) +
+  geom_sf(data = seq) +
+  geom_sf(data = sightings_sf, aes(color = methodology)) +
+  coord_sf(xlim = st_bbox(seq)[c('xmin', 'xmax')],
+           ylim = st_bbox(seq)[c('ymin', 'ymax')]) +
+  ggtitle("Location of koala sightings")
+```
+
+```{r}
+number_koalas <- list(line_transect = line_transect, 
+                      strip_transect = strip_transect) %>%
+  lapply(function(x) {
+    dplyr::select(x, total_number_of_koalas, cloud_percentage, transect_area_ha) %>%
+      mutate(cloud_percentage = as.numeric(cloud_percentage)) %>%
+      mutate(transect_area_ha = as.numeric(transect_area_ha)) %>%
+      filter(!is.na(total_number_of_koalas) | !is.na(cloud_percentage)) %>%
+      mutate(koala_density = total_number_of_koalas / transect_area_ha)
+    }) %>%
+  bind_rows(.id ='transect_method' )
+
+ggplot(number_koalas, aes(cloud_percentage, koala_density)) +
+  geom_point() +
+  geom_smooth()
+```
