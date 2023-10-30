@@ -1,0 +1,470 @@
+---
+title: "Making Figures Look Nice in R"
+author: "Frankie Cho"
+format:
+  revealjs:
+    incremental: true
+    scrollable: true
+    width: 1200
+    height: 700
+fig-dpi: 300
+execute:
+  echo: false
+---
+
+
+## Why spend time visualising?
+
+-   Top publications has great figures
+
+-   Communication = research success
+
+-   Deal with supervisor/ reviewer requests
+
+## Great figures at Nature
+
+![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06577-5/MediaObjects/41586_2023_6577_Fig1_HTML.png)
+
+*The geography of climate and the global patterns of species diversity* (Coelho et al., 2023)
+
+## Great figures at Nature
+
+![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06642-z/MediaObjects/41586_2023_6642_Fig1_HTML.png)
+
+High-resolution maps show that rubber causes substantial deforestation (Wang et al., 2023)
+
+## Edward Tufte: Data-to-ink ratio
+
+$$ \text{Data-to-ink ratio} = \frac{\text{Data ink}}{\text{Total ink used to print the graphic}} $$
+
+## Example: koala monitoring data
+
+
+```{=html}
+<iframe width="1000" height="500" src="https://www.data.qld.gov.au/dataset/seq-koala-survey-data-2010-2015" title="Quarto Documentation"\>\</iframe>
+```
+
+```{r echo=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(sf)
+library(geodata)
+library(janitor)
+library(patchwork)
+library(ggpubr)
+library(see)
+library(patchwork)
+
+strip_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0020/83513/koala-survey-strip-transect-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+line_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0018/83511/koala-survey-line-transect-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+urban_transect <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0022/83515/koala-survey-urban-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+transect_location <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0021/83514/koala-survey-transect-location-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+sightings <- read_csv('https://data.des.qld.gov.au/__data/assets/file/0019/83512/koala-survey-sightings-data.csv',show_col_types = FALSE) %>%
+  clean_names()
+```
+
+```{r echo=FALSE}
+sightings$date_time <- strptime(paste(sightings$date, sightings$time), "%d/%m/%Y %H:%M:%S") %>% as.POSIXlt()
+sightings$year <- year(sightings$date_time)
+sightings$month <- month(sightings$date_time)
+sightings$week <- week(sightings$date_time)
+line_transect$transect_area_ha <- line_transect$transect_length_m * 70 * 0.0001
+survey_effort <- list(line_transect = line_transect, 
+                      strip_transect = strip_transect, 
+                      urban_transect = urban_transect) %>%
+  lapply(function(x) {
+    dplyr::select(x, date, transect_area_ha) %>%
+      mutate(date = as.Date(date, format = '%d/%m/%Y'),
+             transect_area_ha = as.numeric(transect_area_ha)) %>%
+      filter(!is.na(transect_area_ha) | !is.na(date))
+    }) %>%
+  bind_rows(.id ='methodology' ) %>%
+  mutate(methodology = factor(methodology, levels = c('line_transect' , 'strip_transect', 'urban_transect'), labels = c('Line-transect', 'Strip-transect', 'All-of-area'))) %>%
+  mutate(month = month(date)) %>%
+  group_by(month, methodology) %>%
+  summarise(total_transect_area = sum(transect_area_ha, na.rm = T)) %>%
+  filter(!is.na(month))
+```
+
+```{r echo = F}
+scale_coef <- 50
+p1 <- sightings %>%
+  filter(!is.na(date_time)) %>%
+  group_by(month) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = month, y = count)) +
+  geom_bar(data = survey_effort, aes(x= month, y = total_transect_area/scale_coef, fill = methodology), stat = 'identity') +
+  geom_line() +
+  scale_y_continuous(sec.axis = sec_axis( trans=~.*scale_coef, name="Surveyed area")) +
+  ggtitle("Number of koala sightings by survey effort")
+```
+
+```{r echo = F}
+aus <- gadm(country="AUS", level=0, path = '.', resolution = 2) %>% st_as_sf()
+aus_lga <- gadm(country="AUS", level=2, path = '.', resolution = 2) %>% st_as_sf()
+qld <- aus_lga %>%
+  filter(NAME_1 == 'Queensland') 
+seq <- qld %>%
+  filter(NAME_2 %in% c("Brisbane", "Gold Coast", "Ipswich", "Logan", "Moreton Bay", "Redland", "Sunshine Coast"))
+sightings_sf <- sightings %>%
+  filter(!is.na(eastings) & !is.na(northings)) %>%
+  st_as_sf(coords = c('eastings', 'northings'), crs = 28356) %>%
+    mutate(methodology = factor(methodology, c('Line-transect', 'Strip-transect', 'All-of-area')))
+sightings_sf <- sightings_sf %>% st_transform(4326)
+p2 <- ggplot() +
+  #geom_sf(data = aus) +
+  #geom_sf(data = seq) +
+  geom_sf(data = sightings_sf, aes(color = methodology)) +
+  coord_sf(xlim = st_bbox(seq)[c('xmin', 'xmax')],
+           ylim = st_bbox(seq)[c('ymin', 'ymax')]) +
+  ggtitle("Location of koala sightings")
+```
+
+```{r echo = F}
+# Include only months where more than 100 hectares of koalas were surveyed
+number_koalas <- list(line_transect = line_transect, 
+                      strip_transect = strip_transect,
+                      urban_transect = urban_transect) %>%
+  lapply(\(x) dplyr::select(x, total_number_of_koalas, transect_area_ha, date)) %>%
+  lapply(\(x) dplyr::mutate(x, transect_area_ha = as.numeric(transect_area_ha))) %>%
+  bind_rows(.id ='methodology' ) %>%
+  filter(!is.na(date) & !is.na(transect_area_ha) & !is.na(total_number_of_koalas)) %>%
+  mutate(date = dmy(date)) %>%
+  mutate(ym = format(date, "%Y-%m")) %>%
+  mutate(week_start = floor_date(date - 1, "month")) %>%
+  group_by(ym) %>%
+  mutate(transect_area_ha = as.numeric(transect_area_ha)) %>%
+  summarise(koala_density = sum(total_number_of_koalas) / sum(transect_area_ha),
+            total_number_of_koalas = sum(total_number_of_koalas),
+            transect_area_ha = sum(transect_area_ha)) %>%
+  filter(transect_area_ha > 100)
+
+p3 <- number_koalas %>%
+  ggplot(aes(x = ym(ym), y = koala_density)) +
+  geom_point() +
+  geom_smooth(se=F) +
+  ggtitle('Koala density over time')
+```
+
+```{r echo=F}
+p4 <- sightings_sf %>%
+  st_drop_geometry() %>%
+  mutate(methodology = factor(methodology, c('Line-transect', 'Strip-transect', 'All-of-area'))) %>%
+  group_by(methodology) %>%
+  summarise(counts = n()) %>%
+  ggplot(aes(x='', y = counts, fill = methodology)) +
+  geom_bar(stat = 'identity', width = 1) +
+  coord_polar('y', start = 0)+
+  ggtitle('Number of sightings by method')
+```
+
+
+## From just ggplot
+
+
+```{r}
+p1 + p2 + p3 + plot_layout(ncol = 2)
+```
+
+
+Problems
+
+-   Data-to-ink: visual clutter
+
+-   Layout
+
+-   Duplicated legends
+
+-   Annotation
+
+## Finished product
+
+
+```{r echo=F}
+p1_complete <- p1 + 
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  scale_x_continuous('Month', breaks = seq(1,12,1))+
+   scale_y_continuous("Number of koalas", expand = expansion(mult = c(0, .1)), 
+                      sec.axis = sec_axis( trans=~.*scale_coef, name="Surveyed area")) +
+  see::scale_fill_okabeito()+
+  ggtitle("")
+
+# Make a inset map of Daisy Hill
+xlim <- c(0, 10)  # X-axis limits
+ylim <- c(0, 5)   # Y-axis limits
+
+# Create a matrix of polygon vertices
+xlim <- 153.1548 + c(-1,1)*0.1
+ylim <- -27.6361 + c(-1,1)*0.1
+vertices <- matrix(c(xlim[1], ylim[1],
+                     xlim[2], ylim[1],
+                     xlim[2], ylim[2],
+                     xlim[1], ylim[2],
+                     xlim[1], ylim[1]), ncol = 2, byrow = TRUE)
+daisy_hill <- st_sfc(st_polygon(list(vertices)))
+st_crs(daisy_hill) <- 4326
+
+# Create an sf polygon
+p2_edit <- ggplot() +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  geom_sf(data = aus) +
+  geom_sf(data = seq) +
+  geom_sf(data = sightings_sf, aes(color = methodology)) +
+  geom_sf(data=daisy_hill, fill = NA) +
+  coord_sf(xlim = st_bbox(seq)[c('xmin', 'xmax')] + c(0,1.3),
+           ylim = st_bbox(seq)[c('ymin', 'ymax')]) +
+  scale_color_okabeito()
+p2_inset <- ggplot() +
+    theme_bw() +
+  theme(panel.grid = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        plot.margin = unit(c(0,0,0,0), 'cm')) +
+  geom_sf(data = seq) +
+  geom_sf(data = sightings_sf, aes(color = methodology)) +
+  scale_color_okabeito() +
+  coord_sf(xlim = st_bbox(daisy_hill)[c('xmin', 'xmax')],
+           ylim = st_bbox(daisy_hill)[c('ymin', 'ymax')],
+           )
+
+p3_complete <- number_koalas %>%
+  ggplot(aes(x = ym(ym), y = koala_density)) +
+  geom_hline(yintercept = 0) +
+  geom_point(color = 'gray50') +
+  geom_smooth(se=F, color = '#0072B2') +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  scale_x_date("Time") +
+  scale_y_continuous("Sightings/ ha")
+
+p4_complete <- sightings_sf %>%
+  st_drop_geometry() %>%
+  mutate(methodology = factor(methodology, c('Line-transect', 'Strip-transect', 'All-of-area'))) %>%
+  group_by(methodology) %>%
+  summarise(counts = n(),
+            percent = paste0(round(100 * n() / nrow(sightings_sf)),"%")) %>%
+  ggdonutchart("counts", label = 'percent', fill ='methodology', color = 'white', lab.pos = "in", lab.font = "white") +
+  guides(fill = F) +
+  scale_fill_okabeito()
+  
+
+p2_complete <- p2_edit + guides(color = F) + 
+  inset_element(wrap_elements(p2_inset + guides(color = F)), left = 0.5, bottom = 0.25, right = .9, top = .75, align_to = 'plot')
+
+```
+
+```{r fig.height=6, fig.width=10}
+#| code-fold: true
+#| code-summary: "Plot code"
+plt <- p2_complete | (p1_complete / p3_complete) +
+  plot_layout(guides = 'collect', widths = c(1.5,1)) &
+  labs(fill = 'Method')
+plt+ plot_annotation(tag_levels = c('a'))
+```
+
+
+## Tip #1: Selecting a theme
+
+-   `ggpubr`: ggplot for publication-ready plots:
+
+    -   `theme_pubr`: Quick theme to remove non-data elements in the plot
+
+-   `theme_bw` & `theme()`: custom theme to keep the panel border only
+
+## Theme: in code
+
+##  {auto-animate="true"}
+
+Default
+
+
+```{r}
+#| echo: true
+p1
+```
+
+
+##  {auto-animate="true"}
+
+`theme_pubr()`
+
+
+```{r}
+#| echo: true
+#| code-line-numbers: "2"
+p1 + 
+  ggpubr::theme_pubr()
+```
+
+
+##  {auto-animate="true"}
+
+`theme_bw()`
+
+
+```{r}
+#| echo: true
+#| code-line-numbers: "2,3"
+p1 + 
+  theme_bw() +
+  theme(panel.grid = element_blank()) # Remove background grid lines to reduce clutter
+```
+
+
+## Tip #2: Color blindness
+
+Affects: - 1 in 12 men - 1 in 200 women
+
+## What the figures look like with blue blindness:
+
+::: panel-tabset
+### Without color blindness
+
+
+```{r}
+p1
+```
+
+
+### With color blindness
+
+![](figures/blue-blind.jpg)
+:::
+
+## Okabe-Ito color palette
+
+
+```{=html}
+<iframe width="1000" height="500" src="https://siegal.bio.nyu.edu/color-palette/" title="Color blindness"\>\</iframe>
+```
+
+## Updated with Okabe-Ito colors
+
+::: panel-tabset
+### Without color blindness
+
+
+```{r}
+#| echo: true
+#| code-line-numbers: "2"
+p1 +
+  see::scale_fill_okabeito()+
+  theme_bw() +
+  theme(panel.grid = element_blank())
+```
+
+
+### With color blindness
+
+![](figures/blue-blind-okabeito.jpg)
+:::
+
+## Tip #3: Layout creation
+
+Preserves size consistency and improve figure alignment
+
+`patchwork`: easy-to-use syntax for making composite plots
+
+
+```{=html}
+<iframe width="1000" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness"\>\</iframe>
+```
+
+## Vertical bar for side-by-side plotting
+
+
+```{r}
+#| echo: TRUE
+p2_complete | p4_complete
+```
+
+
+## Slash for top and bottom layout
+
+
+```{r}
+p1_complete / p3_complete
+```
+
+
+## {auto-animate: true}
+
+::: Collect legends together and add annotations
+
+
+```{r}
+p2_complete | p1_complete
+```
+
+
+:::
+
+## {auto-animate: true}
+
+::: Collect legends together and add annotations
+
+
+```{r}
+(p2_complete | p1_complete) +
+  plot_annotation(tag_levels = 'a')
+```
+
+
+:::
+
+## {auto-animate: true}
+
+Collect legends together and add annotations :::
+
+
+```{r}
+(p2_complete | p1_complete) +
+  plot_annotation(tag_levels = 'a') +
+  plot_layout(guides = 'collect') &
+  theme(legend.position = 'bottom')
+```
+
+
+:::
+
+## Tip 4: Exporting high-quality figures
+
+-   Higher quality than right click "Save"
+-   Rather than stretching plots in one dimension, specify desired width and height in R
+
+## Terminology
+
+-   dpi: dots-per-inch, the density of pixels in an image
+-   width/ height
+-   scale: relative size of the text (higher scale = smaller labels)
+-   `ggsave` command
+
+## In practice
+
+
+```{r}
+ggsave("figures/plt.png", plt, width = 2000, height = 1200, units = 'px', dpi = 300, scale = 1.2)
+```
+
+
+![](figures/plt.png)
+
+## Summary
+
+1.  Theme: reduce visual clutter
+
+2.  Select a colorblind-friendly palette if possible
+
+3.  Layout in ggplot rather than PowerPoint
+
+4.  Export figures in high-resolution
+

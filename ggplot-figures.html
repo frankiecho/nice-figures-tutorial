@@ -8,7 +8,7 @@
 <link href="ggplot-figures_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="ggplot-figures_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="ggplot-figures_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.353">
+  <meta name="generator" content="quarto-1.3.433">
 
   <meta name="author" content="Frankie Cho">
   <title>Making Figures Look Nice in R</title>
@@ -29,6 +29,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="ggplot-figures_files/libs/revealjs/dist/theme/quarto.css">
   <link href="ggplot-figures_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -243,6 +308,7 @@
     }
     .reveal .slide:not(.center) {
       height: 100%;
+      overflow-y: auto;
     }
     .reveal .slide.scrollable {
       overflow-y: auto;
@@ -339,9 +405,9 @@ Frankie Cho
 <section id="why-spend-time-visualising" class="slide level2">
 <h2>Why spend time visualising?</h2>
 <ul>
-<li><p>Top publications has great figures. Always</p></li>
-<li><p>Clearly communicate results</p></li>
-<li><p>Deal with supervisor/ reviewer requests…?</p></li>
+<li class="fragment"><p>Top publications has great figures</p></li>
+<li class="fragment"><p>Communication = research success</p></li>
+<li class="fragment"><p>Deal with supervisor/ reviewer requests</p></li>
 </ul>
 </section>
 <section id="great-figures-at-nature" class="slide level2">
@@ -358,10 +424,170 @@ Frankie Cho
 <h2>Edward Tufte: Data-to-ink ratio</h2>
 <p><span class="math display">\[ \text{Data-to-ink ratio} = \frac{\text{Data ink}}{\text{Total ink used to print the graphic}} \]</span></p>
 </section>
-<section id="data-example-koala-monitoring-data" class="slide level2">
-<h2>Data example: koala monitoring data</h2>
+<section id="example-koala-monitoring-data" class="slide level2">
+<h2>Example: koala monitoring data</h2>
+<iframe width="1000" height="500" src="https://www.data.qld.gov.au/dataset/seq-koala-survey-data-2010-2015" title="Quarto Documentation" \="">\</iframe>
+</section>
+<section id="from-just-ggplot" class="slide level2">
+<h2>From just ggplot</h2>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"><div class="footer footer-default">
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-7-1.png" width="3000" class="r-stretch"><p>Problems</p>
+<ul>
+<li class="fragment"><p>Data-to-ink: visual clutter</p></li>
+<li class="fragment"><p>Layout</p></li>
+<li class="fragment"><p>Duplicated legends</p></li>
+<li class="fragment"><p>Annotation</p></li>
+</ul>
+</section>
+<section id="finished-product" class="slide level2">
+<h2>Finished product</h2>
+
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-9-1.png" width="3000" class="r-stretch"></section>
+<section id="tip-1-selecting-a-theme" class="slide level2">
+<h2>Tip #1: Selecting a theme</h2>
+<ul>
+<li class="fragment"><p><code>ggpubr</code>: ggplot for publication-ready plots:</p>
+<ul>
+<li class="fragment"><code>theme_pubr</code>: Quick theme to remove non-data elements in the plot</li>
+</ul></li>
+<li class="fragment"><p><code>theme_bw</code> &amp; <code>theme()</code>: custom theme to keep the panel border only</p></li>
+</ul>
+</section>
+<section id="theme-in-code" class="slide level2">
+<h2>Theme: in code</h2>
+</section>
+<section id="section" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p>Default</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb1-1" class="hljs-ln-code"><a href="#cb1-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-10-1.png" width="3000" class="r-stretch"></section>
+<section id="section-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p><code>theme_pubr()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb2-1" class="hljs-ln-code"><a href="#cb2-1"></a>p1 <span class="sc">+</span> </span>
+<span id="cb2-2" class="hljs-ln-code"><a href="#cb2-2"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-11-1.png" width="3000" class="r-stretch"></section>
+<section id="section-2" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p><code>theme_bw()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" data-code-line-numbers="2,3"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb3-1" class="hljs-ln-code"><a href="#cb3-1"></a>p1 <span class="sc">+</span> </span>
+<span id="cb3-2" class="hljs-ln-code"><a href="#cb3-2"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-3" class="hljs-ln-code"><a href="#cb3-3"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove background grid lines to reduce clutter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"></section>
+<section id="tip-2-color-blindness" class="slide level2">
+<h2>Tip #2: Color blindness</h2>
+<p>Affects: - 1 in 12 men - 1 in 200 women</p>
+</section>
+<section id="what-the-figures-look-like-with-blue-blindness" class="slide level2">
+<h2>What the figures look like with blue blindness:</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Without color blindness</a></li><li><a href="#tabset-1-2">With color blindness</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<div class="cell">
+<div class="cell-output-display">
+<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-2">
+<p><img data-src="figures/blue-blind.jpg"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="okabe-ito-color-palette" class="slide level2">
+<h2>Okabe-Ito color palette</h2>
+<iframe width="1000" height="500" src="https://siegal.bio.nyu.edu/color-palette/" title="Color blindness" \="">\</iframe>
+</section>
+<section id="updated-with-okabe-ito-colors" class="slide level2">
+<h2>Updated with Okabe-Ito colors</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Without color blindness</a></li><li><a href="#tabset-2-2">With color blindness</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>p1 <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  see<span class="sc">::</span><span class="fu">scale_fill_okabeito</span>()<span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-14-1.png" width="3000"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2">
+<p><img data-src="figures/blue-blind-okabeito.jpg"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="tip-3-layout-creation" class="slide level2">
+<h2>Tip #3: Layout creation</h2>
+<p><code>patchwork</code>: easy-to-use syntax for making composite plots</p>
+<iframe width="1000" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness" \="">\</iframe>
+</section>
+<section id="vertical-bar-for-side-by-side-plotting" class="slide level2">
+<h2>Vertical bar for side-by-side plotting</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>p2_complete <span class="sc">|</span> p4_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-15-1.png" width="3000" class="r-stretch"></section>
+<section id="slash-for-top-and-bottom-layout" class="slide level2">
+<h2>Slash for top and bottom layout</h2>
+
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000" class="r-stretch"></section>
+<section id="auto-animate-true" class="slide level2">
+<h2>{auto-animate: true}</h2>
+<p>::: Collect legends together and add annotations</p>
+
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"><p>:::</p>
+</section>
+<section id="auto-animate-true-1" class="slide level2">
+<h2>{auto-animate: true}</h2>
+<p>::: Collect legends together and add annotations</p>
+
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000" class="r-stretch"><p>:::</p>
+</section>
+<section id="auto-animate-true-2" class="slide level2">
+<h2>{auto-animate: true}</h2>
+<p>Collect legends together and add annotations :::</p>
+
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000" class="r-stretch"><p>:::</p>
+</section>
+<section id="tip-4-exporting-high-quality-figures" class="slide level2">
+<h2>Tip 4: Exporting high-quality figures</h2>
+<ul>
+<li class="fragment">Higher quality than right click “Save”</li>
+<li class="fragment">Rather than stretching plots in one dimension, specify desired width and height in R</li>
+</ul>
+</section>
+<section id="terminology" class="slide level2">
+<h2>Terminology</h2>
+<ul>
+<li class="fragment">dpi: dots-per-inch, the density of pixels in an image</li>
+<li class="fragment">width/ height</li>
+<li class="fragment">scale: relative size of the text (higher scale = smaller labels)</li>
+<li class="fragment"><code>ggsave</code> command</li>
+</ul>
+</section>
+<section id="in-practice" class="slide level2">
+<h2>In practice</h2>
+
+<img data-src="figures/plt.png" class="r-stretch"></section>
+<section id="summary" class="slide level2">
+<h2>Summary:</h2>
+<div class="footer footer-default">
 
 </div>
 </section>
@@ -542,7 +768,7 @@ Frankie Cho
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1200,
 
         height: 700,
 
