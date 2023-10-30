@@ -485,7 +485,11 @@ Frankie Cho
 <img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"></section>
 <section id="tip-2-color-blindness" class="slide level2">
 <h2>Tip #2: Color blindness</h2>
-<p>Affects: - 1 in 12 men - 1 in 200 women</p>
+<p>Affects:</p>
+<ul>
+<li class="fragment"><p>1 in 12 men</p></li>
+<li class="fragment"><p>1 in 200 women</p></li>
+</ul>
 </section>
 <section id="what-the-figures-look-like-with-blue-blindness" class="slide level2">
 <h2>What the figures look like with blue blindness:</h2>
@@ -533,6 +537,7 @@ Frankie Cho
 </section>
 <section id="tip-3-layout-creation" class="slide level2">
 <h2>Tip #3: Layout creation</h2>
+<p>Preserves size consistency and improve figure alignment</p>
 <p><code>patchwork</code>: easy-to-use syntax for making composite plots</p>
 <iframe width="1000" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness" \="">\</iframe>
 </section>
@@ -545,26 +550,39 @@ Frankie Cho
 <img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-15-1.png" width="3000" class="r-stretch"></section>
 <section id="slash-for-top-and-bottom-layout" class="slide level2">
 <h2>Slash for top and bottom layout</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>p1_complete <span class="sc">/</span> p3_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
+</div>
 <img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000" class="r-stretch"></section>
-<section id="auto-animate-true" class="slide level2">
-<h2>{auto-animate: true}</h2>
-<p>::: Collect legends together and add annotations</p>
+<section id="section-3" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p>Collect legends together and add annotations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb7-1" class="hljs-ln-code"><a href="#cb7-1"></a>p2_complete <span class="sc">|</span> p1_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"><p>:::</p>
-</section>
-<section id="auto-animate-true-1" class="slide level2">
-<h2>{auto-animate: true}</h2>
-<p>::: Collect legends together and add annotations</p>
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"></section>
+<section id="section-4" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p>Collect legends together and add annotations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" data-code-line-numbers="2"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb8-1" class="hljs-ln-code"><a href="#cb8-1"></a>(p2_complete <span class="sc">|</span> p1_complete) <span class="sc">+</span></span>
+<span id="cb8-2" class="hljs-ln-code"><a href="#cb8-2"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'a'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000" class="r-stretch"><p>:::</p>
-</section>
-<section id="auto-animate-true-2" class="slide level2">
-<h2>{auto-animate: true}</h2>
-<p>Collect legends together and add annotations :::</p>
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000" class="r-stretch"></section>
+<section id="section-5" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title"></h2>
+<p>Collect legends together and add annotations</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" data-code-line-numbers="3"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb9-1" class="hljs-ln-code"><a href="#cb9-1"></a>(p2_complete <span class="sc">|</span> p1_complete) <span class="sc">+</span></span>
+<span id="cb9-2" class="hljs-ln-code"><a href="#cb9-2"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'a'</span>) <span class="sc">+</span></span>
+<span id="cb9-3" class="hljs-ln-code"><a href="#cb9-3"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">'collect'</span>) <span class="sc">&amp;</span></span>
+<span id="cb9-4" class="hljs-ln-code"><a href="#cb9-4"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000" class="r-stretch"><p>:::</p>
-</section>
+</div>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000" class="r-stretch"></section>
 <section id="tip-4-exporting-high-quality-figures" class="slide level2">
 <h2>Tip 4: Exporting high-quality figures</h2>
 <ul>
@@ -583,10 +601,19 @@ Frankie Cho
 </section>
 <section id="in-practice" class="slide level2">
 <h2>In practice</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">ggsave</span>(<span class="st">"figures/plt.png"</span>, plt, <span class="at">width =</span> <span class="dv">2000</span>, <span class="at">height =</span> <span class="dv">1200</span>, <span class="at">units =</span> <span class="st">'px'</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">scale =</span> <span class="fl">1.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 <img data-src="figures/plt.png" class="r-stretch"></section>
 <section id="summary" class="slide level2">
-<h2>Summary:</h2>
+<h2>Summary</h2>
+<ol type="1">
+<li class="fragment"><p>Theme: reduce visual clutter</p></li>
+<li class="fragment"><p>Select a colorblind-friendly palette if possible</p></li>
+<li class="fragment"><p>Layout in ggplot rather than PowerPoint</p></li>
+<li class="fragment"><p>Export figures in high-resolution</p></li>
+</ol>
 <div class="footer footer-default">
 
 </div>

@@ -274,7 +274,7 @@ plt+ plot_annotation(tag_levels = c('a'))
 
 ## Theme: in code
 
-##  {auto-animate="true"}
+##  {auto-animate=true}
 
 Default
 
@@ -283,7 +283,7 @@ Default
 p1
 ```
 
-##  {auto-animate="true"}
+##  {auto-animate=true}
 
 `theme_pubr()`
 
@@ -294,7 +294,7 @@ p1 +
   ggpubr::theme_pubr()
 ```
 
-##  {auto-animate="true"}
+##  {auto-animate=true}
 
 `theme_bw()`
 
@@ -308,7 +308,11 @@ p1 +
 
 ## Tip #2: Color blindness
 
-Affects: - 1 in 12 men - 1 in 200 women
+Affects:
+
+-   1 in 12 men
+
+-   1 in 200 women
 
 ## What the figures look like with blue blindness:
 
@@ -367,42 +371,42 @@ p2_complete | p4_complete
 ## Slash for top and bottom layout
 
 ```{r}
+#| echo: true
 p1_complete / p3_complete
 ```
 
-## {auto-animate: true}
+##  {auto-animate=true}
 
-::: Collect legends together and add annotations
+Collect legends together and add annotations
 
 ```{r}
+#| echo: true
 p2_complete | p1_complete
 ```
 
-:::
+##  {auto-animate=true}
 
-## {auto-animate: true}
-
-::: Collect legends together and add annotations
+Collect legends together and add annotations
 
 ```{r}
+#| echo: true
+#| code-line-numbers: "2"
 (p2_complete | p1_complete) +
   plot_annotation(tag_levels = 'a')
 ```
 
-:::
+##  {auto-animate=true}
 
-## {auto-animate: true}
-
-Collect legends together and add annotations :::
+Collect legends together and add annotations
 
 ```{r}
+#| echo: true
+#| code-line-numbers: "3"
 (p2_complete | p1_complete) +
   plot_annotation(tag_levels = 'a') +
   plot_layout(guides = 'collect') &
   theme(legend.position = 'bottom')
 ```
-
-:::
 
 ## Tip 4: Exporting high-quality figures
 
@@ -419,6 +423,7 @@ Collect legends together and add annotations :::
 ## In practice
 
 ```{r}
+#| echo: true
 ggsave("figures/plt.png", plt, width = 2000, height = 1200, units = 'px', dpi = 300, scale = 1.2)
 ```
 
