@@ -14,6 +14,7 @@ execute:
   echo: false
 ---
 
+
 ## Why spend time visualising?
 
 -   Top publications has great figures
@@ -45,6 +46,7 @@ High-resolution maps show that rubber causes substantial deforestation (Wang et 
 $$ \text{Data-to-ink ratio} = \frac{\text{Data ink}}{\text{Total ink used to print the graphic}} $$
 
 ## Example: koala monitoring data
+
 
 ```{=html}
 <iframe width="1200" height="500" src="https://www.data.qld.gov.au/dataset/seq-koala-survey-data-2010-2015" title="Quarto Documentation"\>\</iframe>
@@ -169,11 +171,14 @@ p4 <- sightings_sf %>%
   ggtitle('Number of sightings by method')
 ```
 
+
 ## Just using ggplot
+
 
 ```{r}
 p1 + p2 + p3 + plot_layout(ncol = 2)
 ```
+
 
 ## Problems with just ggplot
 
@@ -186,6 +191,7 @@ p1 + p2 + p3 + plot_layout(ncol = 2)
 -   Annotation
 
 ## Finished product
+
 
 ```{r echo=F}
 p1_complete <- p1 + 
@@ -273,6 +279,7 @@ plt <- p2_complete | (p1_complete / p3_complete) +
 plt+ plot_annotation(tag_levels = c('a'))
 ```
 
+
 ## Tip #1: Selecting a theme
 
 -   `ggpubr`: ggplot for publication-ready plots:
@@ -287,14 +294,17 @@ plt+ plot_annotation(tag_levels = c('a'))
 
 Default
 
+
 ```{r}
 #| echo: true
 p1
 ```
 
+
 ##  {auto-animate=true}
 
 `theme_pubr()`
+
 
 ```{r}
 #| echo: true
@@ -303,9 +313,11 @@ p1 +
   ggpubr::theme_pubr()
 ```
 
+
 ##  {auto-animate=true}
 
 `theme_bw()`
+
 
 ```{r}
 #| echo: true
@@ -314,6 +326,7 @@ p1 +
   theme_bw() +
   theme(panel.grid = element_blank()) # Remove background grid lines to reduce clutter
 ```
+
 
 ## Tip #2: Color blindness
 
@@ -328,9 +341,11 @@ Affects:
 ::: panel-tabset
 ### Without color blindness
 
+
 ```{r}
 p1
 ```
+
 
 ### With color blindness
 
@@ -339,13 +354,16 @@ p1
 
 ## Okabe-Ito color palette
 
+
 ```{=html}
 <iframe width="1200" height="500" src="https://siegal.bio.nyu.edu/color-palette/" title="Color blindness"\>\</iframe>
 ```
+
 ## Updated with Okabe-Ito colors
 
 ::: panel-tabset
 ### Without color blindness
+
 
 ```{r}
 #| echo: true
@@ -355,6 +373,7 @@ p1 +
   theme_bw() +
   theme(panel.grid = element_blank())
 ```
+
 
 ### With color blindness
 
@@ -367,35 +386,44 @@ Preserves size consistency and improve figure alignment
 
 `patchwork`: easy-to-use syntax for making composite plots
 
+
 ```{=html}
 <iframe width="1200" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness"\>\</iframe>
 ```
+
 ## Vertical bar for side-by-side plotting
+
 
 ```{r}
 #| echo: TRUE
 p2_complete | p4_complete
 ```
 
+
 ## Slash for top and bottom layout
+
 
 ```{r}
 #| echo: true
 p1_complete / p3_complete
 ```
 
+
 ##  {auto-animate=true}
 
 Collect legends together and add annotations
+
 
 ```{r}
 #| echo: true
 p2_complete | p1_complete
 ```
 
+
 ##  {auto-animate=true}
 
 Collect legends together and add annotations
+
 
 ```{r}
 #| echo: true
@@ -404,9 +432,11 @@ Collect legends together and add annotations
   plot_annotation(tag_levels = 'a')
 ```
 
+
 ##  {auto-animate=true}
 
 Collect legends together and add annotations
+
 
 ```{r}
 #| echo: true
@@ -416,6 +446,7 @@ Collect legends together and add annotations
   plot_layout(guides = 'collect') &
   theme(legend.position = 'bottom')
 ```
+
 
 ## Tip 4: Exporting high-quality figures
 
@@ -431,10 +462,12 @@ Collect legends together and add annotations
 
 ## In practice
 
+
 ```{r}
 #| echo: true
 ggsave("figures/plt.png", plt, width = 2000, height = 1200, units = 'px', dpi = 300, scale = 1.2)
 ```
+
 
 ![](figures/plt.png)
 
