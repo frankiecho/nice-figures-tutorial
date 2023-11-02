@@ -8,7 +8,7 @@
 <link href="ggplot-figures_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="ggplot-figures_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="ggplot-figures_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.353">
+  <meta name="generator" content="quarto-1.3.433">
 
   <meta name="author" content="Frankie Cho">
   <title>Making Figures Look Nice in R</title>
@@ -406,16 +406,21 @@ Frankie Cho
 <h2>Why spend time visualising?</h2>
 <ul>
 <li class="fragment"><p>Top publications has great figures</p></li>
-<li class="fragment"><p>Communication = research success</p></li>
+<li class="fragment"><p>Communicate ideas</p></li>
 <li class="fragment"><p>Deal with supervisor/ reviewer requests</p></li>
 </ul>
 </section>
 <section id="great-figures-at-nature" class="slide level2">
 <h2>Great figures at Nature</h2>
 
-<img data-src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06577-5/MediaObjects/41586_2023_6577_Fig1_HTML.png" class="r-stretch"><p><em>The geography of climate and the global patterns of species diversity</em> (Coelho et al., 2023)</p>
+<img data-src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06522-6/MediaObjects/41586_2023_6522_Fig1_HTML.png" class="r-stretch"><p><em>The contribution of wildfire to PM2.5 trends in the USA</em> (Burke et al., 2023)</p>
 </section>
 <section id="great-figures-at-nature-1" class="slide level2">
+<h2>Great figures at Nature</h2>
+
+<img data-src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06577-5/MediaObjects/41586_2023_6577_Fig1_HTML.png" class="r-stretch"><p><em>The geography of climate and the global patterns of species diversity</em> (Coelho et al., 2023)</p>
+</section>
+<section id="great-figures-at-nature-2" class="slide level2">
 <h2>Great figures at Nature</h2>
 
 <img data-src="https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-023-06642-z/MediaObjects/41586_2023_6642_Fig1_HTML.png" class="r-stretch"><p>High-resolution maps show that rubber causes substantial deforestation (Wang et al., 2023)</p>
@@ -426,12 +431,12 @@ Frankie Cho
 </section>
 <section id="example-koala-monitoring-data" class="slide level2">
 <h2>Example: koala monitoring data</h2>
-<iframe width="1000" height="500" src="https://www.data.qld.gov.au/dataset/seq-koala-survey-data-2010-2015" title="Quarto Documentation" \="">\</iframe>
+<iframe width="1200" height="500" src="https://www.data.qld.gov.au/dataset/seq-koala-survey-data-2010-2015" title="Quarto Documentation" \="">\</iframe>
 </section>
 <section id="just-using-ggplot" class="slide level2">
 <h2>Just using ggplot</h2>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-7-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-6-1.png" width="3000" class="r-stretch"></section>
 <section id="problems-with-just-ggplot" class="slide level2">
 <h2>Problems with just ggplot</h2>
 <ul>
@@ -444,7 +449,7 @@ Frankie Cho
 <section id="finished-product" class="slide level2">
 <h2>Finished product</h2>
 
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-9-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-8-1.png" width="3000" class="r-stretch"></section>
 <section id="tip-1-selecting-a-theme" class="slide level2">
 <h2>Tip #1: Selecting a theme</h2>
 <ul>
@@ -465,7 +470,7 @@ Frankie Cho
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb1-1" class="hljs-ln-code"><a href="#cb1-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-10-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-9-1.png" width="3000" class="r-stretch"></section>
 <section id="section-1" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 <p><code>theme_pubr()</code></p>
@@ -474,7 +479,7 @@ Frankie Cho
 <span id="cb2-2" class="hljs-ln-code"><a href="#cb2-2"></a>  ggpubr<span class="sc">::</span><span class="fu">theme_pubr</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-11-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-10-1.png" width="3000" class="r-stretch"></section>
 <section id="section-2" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 <p><code>theme_bw()</code></p>
@@ -484,7 +489,7 @@ Frankie Cho
 <span id="cb3-3" class="hljs-ln-code"><a href="#cb3-3"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="co"># Remove background grid lines to reduce clutter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-11-1.png" width="3000" class="r-stretch"></section>
 <section id="tip-2-color-blindness" class="slide level2">
 <h2>Tip #2: Color blindness</h2>
 <p>Affects:</p>
@@ -501,7 +506,7 @@ Frankie Cho
 <div id="tabset-1-1">
 <div class="cell">
 <div class="cell-output-display">
-<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000"></p>
+<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-12-1.png" width="3000"></p>
 </div>
 </div>
 </div>
@@ -513,7 +518,7 @@ Frankie Cho
 </section>
 <section id="okabe-ito-color-palette" class="slide level2">
 <h2>Okabe-Ito color palette</h2>
-<iframe width="1000" height="500" src="https://siegal.bio.nyu.edu/color-palette/" title="Color blindness" \="">\</iframe>
+<iframe width="1200" height="500" src="https://siegal.bio.nyu.edu/color-palette/" title="Color blindness" \="">\</iframe>
 </section>
 <section id="updated-with-okabe-ito-colors" class="slide level2">
 <h2>Updated with Okabe-Ito colors</h2>
@@ -527,7 +532,7 @@ Frankie Cho
 <span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-14-1.png" width="3000"></p>
+<p><img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-13-1.png" width="3000"></p>
 </div>
 </div>
 </div>
@@ -541,7 +546,7 @@ Frankie Cho
 <h2>Tip #3: Layout creation</h2>
 <p>Preserves size consistency and improve figure alignment</p>
 <p><code>patchwork</code>: easy-to-use syntax for making composite plots</p>
-<iframe width="1000" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness" \="">\</iframe>
+<iframe width="1200" height="500" src="https://patchwork.data-imaginist.com/" title="Color blindness" \="">\</iframe>
 </section>
 <section id="vertical-bar-for-side-by-side-plotting" class="slide level2">
 <h2>Vertical bar for side-by-side plotting</h2>
@@ -549,14 +554,14 @@ Frankie Cho
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>p2_complete <span class="sc">|</span> p4_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-15-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-14-1.png" width="3000" class="r-stretch"></section>
 <section id="slash-for-top-and-bottom-layout" class="slide level2">
 <h2>Slash for top and bottom layout</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>p1_complete <span class="sc">/</span> p3_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-15-1.png" width="3000" class="r-stretch"></section>
 <section id="section-3" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 <p>Collect legends together and add annotations</p>
@@ -564,7 +569,7 @@ Frankie Cho
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb7-1" class="hljs-ln-code"><a href="#cb7-1"></a>p2_complete <span class="sc">|</span> p1_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-16-1.png" width="3000" class="r-stretch"></section>
 <section id="section-4" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 <p>Collect legends together and add annotations</p>
@@ -573,7 +578,7 @@ Frankie Cho
 <span id="cb8-2" class="hljs-ln-code"><a href="#cb8-2"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'a'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-17-1.png" width="3000" class="r-stretch"></section>
 <section id="section-5" class="slide level2" data-auto-animate="true">
 <h2 data-id="quarto-animate-title"></h2>
 <p>Collect legends together and add annotations</p>
@@ -584,7 +589,7 @@ Frankie Cho
 <span id="cb9-4" class="hljs-ln-code"><a href="#cb9-4"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'bottom'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-19-1.png" width="3000" class="r-stretch"></section>
+<img data-src="ggplot-figures_files/figure-revealjs/unnamed-chunk-18-1.png" width="3000" class="r-stretch"></section>
 <section id="tip-4-exporting-high-quality-figures" class="slide level2">
 <h2>Tip 4: Exporting high-quality figures</h2>
 <ul>
@@ -797,7 +802,7 @@ Frankie Cho
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1200,
+        width: 1050,
 
         height: 700,
 

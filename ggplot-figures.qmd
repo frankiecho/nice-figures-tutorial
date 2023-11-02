@@ -5,13 +5,7 @@ format:
   revealjs:
     incremental: true
     scrollable: true
-    width: 1200
-    height: 700
 fig-dpi: 300
-fig-width: 1200
-fig-height: 500
-execute:
-  echo: false
 ---
 
 ## Why spend time visualising?

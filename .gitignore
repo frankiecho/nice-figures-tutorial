@@ -2,8 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-
 /.quarto/
 *.rds
 /gadm
 /ggplot-figures_files
+/data
